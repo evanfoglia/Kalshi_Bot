@@ -1,0 +1,13 @@
+# OS / Environment
+.DS_Store
+__pycache__/
+.env
+
+# Runtime Data
+data/
+logs/
+momentum_bot_state.json
+
+# IDE / Editor
+.vscode/
+.idea/
