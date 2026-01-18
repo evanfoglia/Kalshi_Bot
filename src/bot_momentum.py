@@ -129,15 +129,27 @@ class SimpleMomentumBot:
             else:
                 rates['rsi_80'] = 0.676  # Default
             
-            # RSI > 70 + DIP → NO (Turbo Mode)
+            # 1. RSI > 80 + DIP (Golden Signal)
+            mask = (df['rsi_14'] > 80) & (df['return_5m'] < 0)
+            if mask.sum() >= 5: # Rare signal, lower threshold
+                rates['rsi_80_confirm'] = df.loc[mask, 'won_no'].mean()
+            else:
+                rates['rsi_80_confirm'] = 0.806  # Default
+
+            # 2. RSI > 75 + DIP (High Confidence)
+            mask = (df['rsi_14'] > 75) & (df['return_5m'] < 0)
+            if mask.sum() >= 10:
+                rates['rsi_75_confirm'] = df.loc[mask, 'won_no'].mean()
+            else:
+                rates['rsi_75_confirm'] = 0.777  # Default
+
+            # 3. RSI > 70 + DIP (Turbo Mode)
             # Replaced RSI > 75 with RSI > 70 to capture more trades
             mask = (df['rsi_14'] > 70) & (df['return_5m'] < 0)
-            if mask.sum() >= 50:
+            if mask.sum() >= 20: # Higher frequency, need more samples
                 rates['rsi_70_confirm'] = df.loc[mask, 'won_no'].mean()
             else:
-                rates['rsi_70_confirm'] = 0.67  # New default
-            
-            # REMOVED: RSI > 75 (Subsumed by > 70)
+                rates['rsi_70_confirm'] = 0.719  # Default
             
             # 15m drop < -0.5% → YES (Loosened from -0.6% for Turbo Volume)
             mask = df['return_15m'] < -0.005

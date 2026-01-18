@@ -137,3 +137,21 @@ python3 src/backtest_momentum.py --days 30
 
 **Educational Purpose Only.**
 This software is for educational and experimental purposes only. It is not financial advice. Cryptocurrency trading involves significant risk. The "win rates" and "expected value" calculations are based on historical data, which is not a guarantee of future performance. The author is not responsible for any financial losses incurred from using this software. Use at your own risk.
+
+---
+
+## 🛠️ Strategy Maintenance Workflow
+
+To keep the bot profitable, follow this maintenance cycle:
+
+### 1. Daily/Weekly: Auto-Calibration (Automatic)
+*   **What it does:** The bot automatically adjusts the **win probability** of its *existing* strategies every time it restarts.
+*   **Example:** If "RSI > 80" usually wins 80% of the time, but in the last 2 weeks it only won 50% of the time, the bot will see this and stop taking those trades (or bet $0).
+*   **Action:** Just ensure the bot is running. It self-corrects for *performance*, but not for *new ideas*.
+
+### 2. Monthly: Strategic Review (Manual)
+*   **What it does:** Use the backtester to find **new patterns** if the market regime changes completely (e.g., from "ranging" to "trending").
+*   **Action:**
+    1.  Run `python3 src/backtest_momentum.py --days 30`
+    2.  Look at the "Top Strategies" list.
+    3.  If a *new* strategy (e.g., "Taker Ratio > 60%") is performing better than your current ones, you must manually update `src/strategy.py` to include it.
