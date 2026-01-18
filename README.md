@@ -3,7 +3,7 @@
 ## Project Goal
 This project is an automated trading bot designed to profit from **Bitcoin (BTC)** price movements on **Kalshi's 15-minute prediction markets**.
 Instead of predicting the exact price, it predicts **volatility and mean reversion**:
-*   If BTC crashes fast → Bet it will stay down (or revert).
+*   If BTC crashes fast → Bet it will **bounce back up** (Mean Reversion).
 *   If BTC goes parabolic → Short the top.
 
 > [!NOTE]
