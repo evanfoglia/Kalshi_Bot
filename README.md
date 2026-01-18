@@ -23,7 +23,7 @@ The bot currently trades these high-probability signals:
 | **Turbo Short** | Reversion | RSI > **70** + Red Candle 5m | **~72.5%** | Medium |
 
 **Auto-Calibration:**
-Every time the bot starts, it downloads the last 30 days of BTC data and *re-calculates* these win rates based on recent market conditions. If the market regime changes and a strategy stops working, the bot automatically adjusts its confidence (and bet size).
+Every time the bot starts, it downloads the last **30 days** of BTC data. It then uses the most recent **14 days** to *re-calculate* the win rates. This ensures the bot adapts to the latest market regime (e.g., stopping a strategy if it hasn't worked in the last 2 weeks).
 
 ---
 
