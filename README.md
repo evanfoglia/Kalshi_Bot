@@ -108,3 +108,31 @@ python3 src/backtest_momentum.py --days 30
 *   **Bet Sizing:** Variable (Kelly Criterion). Stronger signals (like Golden Signal) = Bigger bets.
 *   **Cooldown:** 5 minutes between trades (to prevent over-trading the same signal).
 *   **Logging:** Stats are printed to console and saved to logs every 5 minutes.
+## 🛠️ Installation & Prerequisities
+
+### Prerequisites
+*   Python 3.8+
+*   Git
+
+### Setup
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/evanfoglia/Kalshi_Bot.git
+    cd Kalshi_Bot
+    ```
+
+2.  **Install dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+3.  **No API Keys Needed (Simulation Mode):**
+    This bot currently runs in **Paper Trading Mode** using public data sources (Kraken for price, Kalshi public API for markets). You do **not** need to configure any API keys to run the simulation.
+
+---
+
+## ⚠️ Disclaimer
+
+**Educational Purpose Only.**
+This software is for educational and experimental purposes only. It is not financial advice. Cryptocurrency trading involves significant risk. The "win rates" and "expected value" calculations are based on historical data, which is not a guarantee of future performance. The author is not responsible for any financial losses incurred from using this software. Use at your own risk.
