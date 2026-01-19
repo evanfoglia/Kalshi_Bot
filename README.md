@@ -26,6 +26,12 @@ The bot currently trades these high-probability signals:
 **Auto-Calibration:**
 Every time the bot starts, it downloads the last **30 days** of BTC data. It then uses the most recent **14 days** to *re-calculate* the win rates. This ensures the bot adapts to the latest market regime (e.g., stopping a strategy if it hasn't worked in the last 2 weeks).
 
+### 🛡️ Crash Protection (Circuit Breaker)
+To prevent "catching a falling knife," the bot has a hard safety stop:
+*   **Trigger:** If BTC price drops by **more than 2.0%** in 15 minutes.
+*   **Action:** The bot **suspends all trading** until the volatility decreases.
+
+
 ---
 
 ## 📂 File Structure & Architecture
