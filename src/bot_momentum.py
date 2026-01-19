@@ -143,13 +143,20 @@ class SimpleMomentumBot:
             else:
                 rates['rsi_75_confirm'] = 0.777  # Default
 
-            # 3. RSI > 70 + DIP (Turbo Mode)
-            # Replaced RSI > 75 with RSI > 70 to capture more trades
-            mask = (df['rsi_14'] > 70) & (df['return_5m'] < 0)
-            if mask.sum() >= 20: # Higher frequency, need more samples
-                rates['rsi_70_confirm'] = df.loc[mask, 'won_no'].mean()
+            # 3. RSI > 65 + DIP (Turbo Mode - Expanded)
+            # Replaced RSI > 70 with RSI > 65 to double trade volume with same WR
+            mask = (df['rsi_14'] > 65) & (df['return_5m'] < 0)
+            if mask.sum() >= 40: # High frequency, need robust sample
+                rates['rsi_65_confirm'] = df.loc[mask, 'won_no'].mean()
             else:
-                rates['rsi_70_confirm'] = 0.719  # Default
+                rates['rsi_65_confirm'] = 0.719  # Default
+
+            # 4. RSI < 30 (Oversold Bounce)
+            mask = df['rsi_14'] < 30
+            if mask.sum() >= 50:
+                rates['rsi_30_oversold'] = df.loc[mask, 'won_yes'].mean()
+            else:
+                rates['rsi_30_oversold'] = 0.666 # Default
             
             # 15m drop < -0.5% → YES (Loosened from -0.6% for Turbo Volume)
             mask = df['return_15m'] < -0.005

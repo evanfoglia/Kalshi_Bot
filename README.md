@@ -20,8 +20,9 @@ The bot currently trades these high-probability signals:
 | :--- | :--- | :--- | :--- | :--- |
 | **Golden Signal** | Reversion | RSI > **80** + Red Candle 5m | **~80.6%** | Low (Sniper) |
 | **High Confidence** | Reversion | RSI > **75** + Red Candle 5m | **~77.7%** | Medium-Low |
-| **Turbo Short** | Reversion | RSI > **70** + Red Candle 5m | **~71.9%** | Medium |
+| **Turbo Short** | Reversion | RSI > **65** + Red Candle 5m | **~71.9%** | High |
 | **Buy the Dip** | Reversion | Price drops **> 0.3%** in 15 mins | **~69.6%** | High (Volume) |
+| **Oversold Bounce** | Reversion | RSI < **30** (No Confirm Needed) | **~66.6%** | Very High |
 
 **Auto-Calibration:**
 Every time the bot starts, it downloads the last **30 days** of BTC data. It then uses the most recent **14 days** to *re-calculate* the win rates. This ensures the bot adapts to the latest market regime (e.g., stopping a strategy if it hasn't worked in the last 2 weeks).
