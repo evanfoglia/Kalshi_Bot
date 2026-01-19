@@ -18,6 +18,12 @@ def get_signal(indicators, calibrated_rates=None):
     return_15m = indicators.get('return_15m', 0)
     return_5m = indicators.get('return_5m', 0)
     
+    # === SAFETY: CRASH PROTECTION ===
+    # If BTC drops > 2.0% in 15 mins, the market is crashing.
+    # Don't try to catch the knife. Wait for stabilization.
+    if return_15m < -0.02:
+        return None
+    
     # === OVERBOUGHT SIGNALS (Bet NO) ===
     
     # 1. THE GOLDEN SIGNAL: RSI > 80 + Dip (Red Candle)
