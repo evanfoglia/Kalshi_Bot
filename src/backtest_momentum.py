@@ -316,8 +316,132 @@ def test_momentum_strategies(df):
     print()
     
     # ============================================================
-    # FIND BEST STRATEGIES
+    # STRATEGY 6: Whale Watcher (Volume Spikes)
     # ============================================================
+    print("STRATEGY 6: Whale Watcher (Volume Spikes)")
+    print("-"*50)
+    
+    for vol_mult in [2.0, 3.0, 4.0, 5.0]:
+        # Blow-off Top? (High Volume + Price Up -> Bet NO)
+        mask = (df['vol_ratio'] > vol_mult) & (df['return_5m'] > 0)
+        if mask.sum() > 0:
+            wins = df.loc[mask, 'won_no'].sum()
+            total = mask.sum()
+            wr = wins / total * 100
+            if total >= 10:
+                results.append({
+                    'strategy': f'Volume > {vol_mult}x + Up',
+                    'direction': 'NO',
+                    'trades': total,
+                    'wins': wins,
+                    'win_rate': wr
+                })
+            print(f"  Volume > {vol_mult}x + Up → Bet NO (Fade): {wins}/{total} = {wr:.1f}% win rate")
+            
+        # Panic Dump? (High Volume + Price Down -> Bet YES)
+        mask = (df['vol_ratio'] > vol_mult) & (df['return_5m'] < 0)
+        if mask.sum() > 0:
+            wins = df.loc[mask, 'won_yes'].sum()
+            total = mask.sum()
+            wr = wins / total * 100
+            if total >= 10:
+                results.append({
+                    'strategy': f'Volume > {vol_mult}x + Down',
+                    'direction': 'YES',
+                    'trades': total,
+                    'wins': wins,
+                    'win_rate': wr
+                })
+            print(f"  Volume > {vol_mult}x + Down → Bet YES (Bounce): {wins}/{total} = {wr:.1f}% win rate")
+
+    print()
+
+    # ============================================================
+    # STRATEGY 7: Rubber Band (Bollinger Logic)
+    # ============================================================
+    print("STRATEGY 7: Rubber Band (Mean Reversion)")
+    print("-"*50)
+    # Logic: If price is > N std devs from MA15, bet reversion
+    
+    for std_dev in [2.0, 2.5, 3.0]:
+        # Price > Upper Band
+        # ma_15_rel is (Close - MA) / MA. vol_15 is Std/Close.
+        # We approximate: If ma_15_rel > N * vol_15
+        mask = df['ma_15_rel'] > (std_dev * df['vol_15'])
+        if mask.sum() > 0:
+            wins = df.loc[mask, 'won_no'].sum()
+            total = mask.sum()
+            wr = wins / total * 100
+            if total >= 10:
+                results.append({
+                    'strategy': f'Rubber Band Top ({std_dev}SD)',
+                    'direction': 'NO',
+                    'trades': total,
+                    'wins': wins,
+                    'win_rate': wr
+                })
+            print(f"  Price > {std_dev} SD (Top) → Bet NO: {wins}/{total} = {wr:.1f}% win rate")
+
+        # Price < Lower Band
+        mask = df['ma_15_rel'] < -(std_dev * df['vol_15'])
+        if mask.sum() > 0:
+            wins = df.loc[mask, 'won_yes'].sum()
+            total = mask.sum()
+            wr = wins / total * 100
+            if total >= 10:
+                results.append({
+                    'strategy': f'Rubber Band Bottom ({std_dev}SD)',
+                    'direction': 'YES',
+                    'trades': total,
+                    'wins': wins,
+                    'win_rate': wr
+                })
+            print(f"  Price < {std_dev} SD (Bottom) → Bet YES: {wins}/{total} = {wr:.1f}% win rate")
+
+    print()
+
+    # ============================================================
+    # STRATEGY 8: Trend Surfer (MA Alignment)
+    # ============================================================
+    print("STRATEGY 8: Trend Surfer (MA Alignment)")
+    print("-"*50)
+    
+    # Full Uptrend: Price > MA5 > MA15 > MA30
+    # Note: Our relative MAs are (Price - MA)/MA. 
+    # If Price > MA, rel > 0.
+    # We test explicit alignment. 
+    
+    # Simple Uptrend: Price > All MAs
+    mask_up = (df['ma_5_rel'] > 0) & (df['ma_15_rel'] > 0) & (df['ma_30_rel'] > 0)
+    if mask_up.sum() > 0:
+        wins = df.loc[mask_up, 'won_yes'].sum()
+        total = mask_up.sum()
+        wr = wins / total * 100
+        results.append({
+            'strategy': 'Trend Surfer (Full Up)',
+            'direction': 'YES',
+            'trades': total,
+            'wins': wins,
+            'win_rate': wr
+        })
+        print(f"  Full Uptrend (All MAs < Price) → Bet YES: {wins}/{total} = {wr:.1f}% win rate")
+
+    # Full Downtrend
+    mask_down = (df['ma_5_rel'] < 0) & (df['ma_15_rel'] < 0) & (df['ma_30_rel'] < 0)
+    if mask_down.sum() > 0:
+        wins = df.loc[mask_down, 'won_no'].sum()
+        total = mask_down.sum()
+        wr = wins / total * 100
+        results.append({
+            'strategy': 'Trend Surfer (Full Down)',
+            'direction': 'NO',
+            'trades': total,
+            'wins': wins,
+            'win_rate': wr
+        })
+        print(f"  Full Downtrend (All MAs > Price) → Bet NO:  {wins}/{total} = {wr:.1f}% win rate")
+
+    print()
     print("="*70)
     print("TOP STRATEGIES BY WIN RATE (min 50 trades)")
     print("="*70)
